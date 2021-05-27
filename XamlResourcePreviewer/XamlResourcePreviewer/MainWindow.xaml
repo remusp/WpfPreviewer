@@ -36,7 +36,8 @@
                       Padding="0 0 3 0"
                       Grid.Row="1"
                       Grid.ColumnSpan="3">
-            <ItemsControl ItemsSource="{Binding Files}">
+            <ItemsControl ItemsSource="{Binding Files}"
+                          x:Name="BindingRoot">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Expander BorderBrush="Coral"
@@ -46,6 +47,8 @@
                             <Expander.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <Button Content="X"
+                                            Command="{Binding ElementName=BindingRoot, Path=DataContext.RemoveFileCommand}"
+                                            CommandParameter="{Binding}"
                                             Style="{StaticResource Button.Normal}" />
                                     <TextBlock Text="{Binding Name}"
                                                Style="{StaticResource TextBlock.Normal}"
