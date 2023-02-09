@@ -30,7 +30,8 @@
                 Click="AddFilesClick"
                 Grid.Column="2"
                 Style="{StaticResource Button.Normal}" />
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+        <ScrollViewer x:Name="MainScroll"
+                      HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto"
                       Margin="5"
                       Padding="0 0 3 0"
@@ -45,22 +46,28 @@
                                   Padding="3"
                                   IsExpanded="True">
                             <Expander.Header>
-                                <StackPanel Orientation="Horizontal">
+                                <DockPanel HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}">
+                                    <TextBlock Text="{Binding Name}"
+                                               Style="{StaticResource TextBlock.Normal}"
+                                               DockPanel.Dock="Left" />
                                     <Button Content="X"
                                             Command="{Binding ElementName=BindingRoot, Path=DataContext.RemoveFileCommand}"
                                             CommandParameter="{Binding}"
-                                            Style="{StaticResource Button.Normal}" />
-                                    <TextBlock Text="{Binding Name}"
-                                               Style="{StaticResource TextBlock.Normal}"
-                                                />
-                                </StackPanel>
+                                            Style="{StaticResource Button.Normal}"
+                                            HorizontalAlignment="Right"
+                                            DockPanel.Dock="Right" />
+                                </DockPanel>
                             </Expander.Header>
-                            <ItemsControl ItemsSource="{Binding Items}">
-                                <ItemsControl.ItemsPanel>
+                            <ListBox ItemsSource="{Binding Items}"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     BorderThickness="0"
+                                     PreviewMouseWheel="ListBox_PreviewMouseWheel">
+                                <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <WrapPanel />
+                                        <WrapPanel IsItemsHost="True"
+                                                   Orientation="Horizontal" />
                                     </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
+                                </ListBox.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <DockPanel ToolTip="{Binding Name}">
@@ -75,10 +82,15 @@
                                                    Margin="10"
                                                    Width="64"
                                                    Height="64" />
+                                            <DockPanel.InputBindings>
+                                                <MouseBinding MouseAction="LeftDoubleClick"
+                                                              Command="{Binding ElementName=BindingRoot, Path=DataContext.OpenWindowCommand}"
+                                                              CommandParameter="{Binding}" />
+                                            </DockPanel.InputBindings>
                                         </DockPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                            </ListBox>
                         </Expander>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
